@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=77"]  # PEP 639: `license` as an SPDX string
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "adaptivepnp"
+version = "1.0.0"
+description = "Plug-and-play image restoration with the noise level and step size estimated at every iteration"
+authors = [{ name = "Haley Duba-Sullivan", email = "hduba@purdue.edu" }]
+readme = "README.md"
+requires-python = ">=3.11"
+license = "BSD-3-Clause"
+license-files = ["LICENSE", "THIRD_PARTY_LICENSES"]
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Image Processing",
+]
+dependencies = [
+    "torch>=2.2",
+    "torchvision",
+    "numpy",
+    "scipy",
+    "scikit-image",
+    "matplotlib",
+    "Pillow",
+    "datasets",          # CBSD68 via the HuggingFace dataset saved to disk
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff", "black"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["adaptivepnp*"]
+
+[tool.black]
+line-length = 120
+target-version = ["py311", "py312", "py313"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "B", "UP", "I", "NPY", "D"]
+ignore = ["E501", "E731", "B007", "B028", "B904", "B905", "D107", "D203", "D211", "D213", "D400", "D401", "D415"]
+
+[tool.ruff.lint.per-file-ignores]
+"**/__init__.py" = ["F401"]
+"tests/*" = ["D"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "data: needs data/ (kernels_12.mat, CBSD68) and model_zoo/drunet_color.pth; skipped when they are missing",
+]
